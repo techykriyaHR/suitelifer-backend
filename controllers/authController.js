@@ -1,15 +1,22 @@
 import jwt from "jsonwebtoken";
+import { Auth } from "../models/authModel.js";
 
 const users = [
   { username: "admin", password: "password", role: "admin" },
   { username: "employee", password: "password", role: "employee" },
 ];
 
-export const login = (req, res) => {
+export const login = async (req, res) => {
   const { username, password, role } = req.body;
   const user = users.find(
     (u) => u.username === username && u.password === password && u.role === role
   );
+  const result = await Auth.authenticate(username);
+
+  console.dir(result, { depth: null });
+
+  return res.json({ result });
+
   if (!user) return res.status(401).json({ message: "Invalid credentials" });
 
   const accessToken = jwt.sign(
