@@ -4,6 +4,7 @@ import {
   logout,
   refreshToken,
   userInfo,
+  getServices,
 } from "../controllers/authController.js";
 import verifyJWT from "../middlewares/verifyJWT.js";
 
@@ -16,6 +17,8 @@ router.post("/logout", logout);
 router.get("/user-info", verifyJWT, userInfo);
 
 router.get("/refresh-token", refreshToken);
+
+router.get("/get-services/:id", getServices);
 
 router.get("/profile", verifyJWT, (req, res) => {
   return res.json({ message: "Profile data", user: req.user });
