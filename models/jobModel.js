@@ -78,8 +78,7 @@ export const Job = {
       .join("sl_job_industries", {
         "sl_company_jobs.industry_id": "sl_job_industries.job_ind_id",
       })
-      .where({ is_shown: 1 })
-      .groupBy("industry_name");
+      .where({ is_shown: 1, job_id });
   },
   searchJob: async (search_val) => {
     return await db
@@ -145,31 +144,8 @@ export const Job = {
         "sl_company_jobs.created_by": "hris_user_infos.user_id",
       });
   },
-  insertJob: async (
-    title,
-    description,
-    employment_type,
-    setup_id,
-    is_open,
-    is_shown,
-    industry_id,
-    user_id
-  ) => {
-    return await table().insert({
-      job_id: uuidv7(),
-      company_id,
-      title,
-      description,
-      employment_type,
-      setup_id,
-      is_open,
-      is_shown,
-      industry_id,
-      created_at: new Date().toISOString(),
-      created_by: user_id,
-      updated_at: null,
-      updated_by: null,
-    });
+  insertJob: async (newJob) => {
+    return await table().insert(newJob);
   },
   updateJob: async (
     job_id,
@@ -179,8 +155,7 @@ export const Job = {
     setup_id,
     is_open,
     is_shown,
-    industry_id,
-    user_id
+    industry_id
   ) => {
     return await table().where({ job_id }).update({
       title,
@@ -190,8 +165,6 @@ export const Job = {
       is_open,
       is_shown,
       industry_id,
-      updated_at: new Date().toISOString(),
-      updated_by: user_id,
     });
   },
   deleteJob: async (job_id) => {
